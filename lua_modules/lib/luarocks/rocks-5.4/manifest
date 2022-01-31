@@ -1,0 +1,55 @@
+commands = {}
+dependencies = {
+   classic = {
+      ["0.1.0-1"] = {}
+   },
+   inspect = {
+      ["3.1.2-0"] = {
+         {
+            constraints = {
+               {
+                  op = ">=",
+                  version = {
+                     5, 1, string = "5.1"
+                  }
+               }
+            },
+            name = "lua"
+         }
+      }
+   }
+}
+modules = {
+   classic = {
+      "classic/0.1.0-1"
+   },
+   inspect = {
+      "inspect/3.1.2-0"
+   }
+}
+repository = {
+   classic = {
+      ["0.1.0-1"] = {
+         {
+            arch = "installed",
+            commands = {},
+            dependencies = {},
+            modules = {
+               classic = "classic.lua"
+            }
+         }
+      }
+   },
+   inspect = {
+      ["3.1.2-0"] = {
+         {
+            arch = "installed",
+            commands = {},
+            dependencies = {},
+            modules = {
+               inspect = "inspect.lua"
+            }
+         }
+      }
+   }
+}
