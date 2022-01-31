@@ -9,7 +9,7 @@ function love.load()
   screenWidth = love.graphics.getWidth();
   screenHeight = love.graphics.getHeight();
 
-  player = Player(screenWidth/2, 0)
+  player = Player(screenWidth/2, 0, screenHeight)
   opponent = Opponent(screenWidth/2, screenHeight)
 
   --backtrack = love.audio.newSource("song.ogg", "stream")
@@ -22,19 +22,23 @@ end
 
 function love.update(dt)
   for i,v in ipairs(player.bullets) do
-    --sin = math.sin(math.rad(v.rads))
-    --cos = math.cos(math.rad(v.rads))
-    --print("sin " .. sin)
+    if v.cos >= 0 then
+      new_x = v.x + 1000 * dt * v.cos
+    else
+      new_x = v.x - 1000 * dt * -v.cos
+    end
 
-    --new_x = v.x + 1000 * cos * dt
-    new_y = v.y + 1000 * dt
+    if v.sin >= 0 then
+      new_y = v.y + 1000 * dt * v.sin
+    else 
+      new_y = v.y - 1000 * dt * -v.sin
+    end
 
-    print("x " .. new_x)
-    print("y " .. new_y)
-    if new_y > screenHeight then
+    if new_y > screenHeight or new_x > screenWidth or new_y < 0 or new_x < 0 then
       table.remove(player.bullets, i)
     else
       v.y = new_y
+      v.x = new_x
     end 
   end
 
