@@ -1,3 +1,8 @@
+if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then
+  package.loaded["lldebugger"] = assert(loadfile(os.getenv("LOCAL_LUA_DEBUGGER_FILEPATH")))()
+  require("lldebugger").start()
+end
+
 package.path = "./lua_modules/share/lua/5.4/?.lua"
 package.cpath = "./lua_modules/lib/lua/5.4/?.so"
 io.stdout:setvbuf("no")
