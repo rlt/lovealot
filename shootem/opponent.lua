@@ -5,7 +5,7 @@ Opponent = Object:extend()
 MAX_SPEED = 1000
 
 function Opponent:new(startX, startY)
-  self.image = love.graphics.newImage("cat.png") -- 900 x 577
+  self.image = love.graphics.newImage("assets/images/cat.png") -- 900 x 577
   self.width = self.image:getWidth()
   self.height = self.image:getHeight()
   self.x = startX

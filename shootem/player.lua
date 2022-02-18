@@ -5,7 +5,7 @@ Player = Object:extend()
 radius = 0
 
 function Player:new(startX, startY, screenHeight)
-  self.image = love.graphics.newImage("sheep.png")
+  self.image = love.graphics.newImage("assets/images/sheep.png")
   self.width = self.image:getWidth();
   self.height = self.image:getHeight();
   self.x = startX

@@ -1,3 +1,4 @@
+
 if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then
   package.loaded["lldebugger"] = assert(loadfile(os.getenv("LOCAL_LUA_DEBUGGER_FILEPATH")))()
   require("lldebugger").start()
@@ -6,9 +7,11 @@ end
 package.path = "./lua_modules/share/lua/5.4/?.lua"
 package.cpath = "./lua_modules/lib/lua/5.4/?.so"
 io.stdout:setvbuf("no")
+local inspect = require "inspect"
 
 require "player"
 require "opponent"
+require "explosion"
 
 function love.load()
   screenWidth = love.graphics.getWidth();
@@ -22,7 +25,16 @@ function love.load()
   --backtrack:setVolume(0.5)
   --backtrack:play()
 
-  --hit = love.audio.newSource("sfx.ogg", "static")
+  hit = love.audio.newSource("assets/audio/impactPlate_medium_004.ogg", "static")
+  fire = love.audio.newSource("assets/audio/impactPunch_medium_001.ogg", "static")
+
+  explosions = {}
+  explosionImages = {}
+  for i=0,8 do
+    table.insert(explosionImages, love.graphics.newImage("assets/images/explosion/explosion0"..i..".png"))
+  end
+  
+  explosionFrame = 1
 end
 
 function love.update(dt)
@@ -79,6 +91,14 @@ function love.update(dt)
     player:rotateCounterClockwise(dt)
   end
 
+  for i=#explosions, 1, -1 do
+    explosion = explosions[i]
+    explosion:update(dt)
+    if explosion.expired then
+      table.remove(explosions, i)
+    end
+  end
+
   if opponent.dead then
     opponent.furballs = {}
     opponent.rads = math.max(90, opponent.rads + 1)
@@ -89,6 +109,8 @@ function love.update(dt)
   for i=#player.bullets, 1, -1 do
     bullet = player.bullets[i]
     if opponent:isHit(bullet, dt) or opponent:isFurballHit(bullet) then
+      hit:play()
+      table.insert(explosions, Explosion(bullet.x, bullet.y))
       table.remove(player.bullets,i)
       if opponent.dead then break end
     end
@@ -103,13 +125,12 @@ function love.update(dt)
   end
 
   opponent:move(dt, screenWidth)
-
 end
 
 function love.keypressed(key, scancode, isRepeat)
   if key == "space" then
     player:shoot()
-    --hit:play()
+    fire:play()
   end
 
   -- debugging
@@ -130,4 +151,8 @@ end
 function love.draw()
   player:draw()
   opponent:draw()
+
+  for i,v in ipairs(explosions) do
+    v:draw(explosionImages)
+  end
 end
